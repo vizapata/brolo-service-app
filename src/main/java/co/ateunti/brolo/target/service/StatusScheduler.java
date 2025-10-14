@@ -1,26 +1,25 @@
 package co.ateunti.brolo.target.service;
 
+import co.ateunti.brolo.target.model.StatusType;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-
 @Component
+@Log4j2
+@RequiredArgsConstructor
 public class StatusScheduler {
     private final KafkaStatusService statusService;
-    private static boolean initialStatus = true;
 
-    public StatusScheduler(KafkaStatusService statusService) {
-        this.statusService = statusService;
+    @PostConstruct
+    void init() {
+        this.statusService.sendStatus(StatusType.INITIAL);
     }
 
-    @Scheduled(fixedDelay = 60, timeUnit = MINUTES, initialDelay = 1)
+    @Scheduled(fixedDelay = 15)
     public void notifyStatus() {
-        this.statusService.notifyStatus(initialStatus);
-        markStatusInitiated();
-    }
-
-    private static void markStatusInitiated() {
-        initialStatus = false;
+        this.statusService.sendStatus(StatusType.PING);
     }
 }

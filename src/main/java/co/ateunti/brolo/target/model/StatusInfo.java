@@ -1,4 +1,4 @@
 package co.ateunti.brolo.target.model;
 
-public record StatusInfo(boolean up, boolean isInitial) {
+public record StatusInfo(StatusType type) {
 }
