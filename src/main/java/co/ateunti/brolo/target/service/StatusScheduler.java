@@ -5,6 +5,8 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 @Component
 public class StatusScheduler {
     private final KafkaStatusService statusService;
@@ -18,7 +20,7 @@ public class StatusScheduler {
         this.statusService.sendStatus(StatusType.INITIAL);
     }
 
-    @Scheduled(fixedDelay = 15)
+    @Scheduled(fixedDelay = 15, timeUnit = MINUTES)
     public void notifyStatus() {
         this.statusService.sendStatus(StatusType.PING);
     }
